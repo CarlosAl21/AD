@@ -1,9 +1,9 @@
 async function iniciarSesion(event) {
-    try {
-        event.preventDefault(); // Aquí se debe llamar event.preventDefault() para prevenir el envío del formulario
-        const email = document.getElementById('loginEmail').value;
-        const password = document.getElementById('loginPassword').value;
+    event.preventDefault(); // Prevenir el envío del formulario por defecto
+    const email = document.getElementById('loginEmail').value;
+    const password = document.getElementById('loginPassword').value;
 
+    try {
         const response = await fetch('http://www.proyectoad.somee.com/AuthService.svc/rest/IniciarSesion', {
             method: 'POST',
             headers: {
@@ -29,13 +29,13 @@ async function iniciarSesion(event) {
 }
 
 async function registrarUsuario(event) {
-    try {
-        event.preventDefault(); // Aquí también se debe llamar event.preventDefault() para prevenir el envío del formulario
-        const nombre = document.getElementById('registerNombre').value;
-        const apellido = document.getElementById('registerApellido').value;
-        const email = document.getElementById('registerEmail').value;
-        const password = document.getElementById('registerPassword').value;
+    event.preventDefault(); // Prevenir el envío del formulario por defecto
+    const nombre = document.getElementById('registerNombre').value;
+    const apellido = document.getElementById('registerApellido').value;
+    const email = document.getElementById('registerEmail').value;
+    const password = document.getElementById('registerPassword').value;
 
+    try {
         const response = await fetch('http://www.proyectoad.somee.com/UsuarioService.svc/rest/RegistrarUsuario', {
             method: 'POST',
             headers: {
@@ -88,7 +88,11 @@ async function listarVuelos() {
     }
 }
 
-async function buscarVuelos(origen, destino) {
+async function buscarVuelos(event) {
+    event.preventDefault();
+    const origen = document.getElementById('searchOrigen').value;
+    const destino = document.getElementById('searchDestino').value;
+
     try {
         const response = await fetch('http://www.proyectoad.somee.com/VueloService.svc/rest/BuscarVuelos', {
             method: 'POST',
@@ -147,11 +151,11 @@ async function listarReservas() {
 }
 
 async function registrarReserva(event) {
-    try {
-        event.preventDefault(); // Aquí se debe llamar event.preventDefault() para prevenir el envío del formulario
-        const usuarioId = document.getElementById('reservaUsuarioId').value;
-        const vueloId = document.getElementById('reservaVueloId').value;
+    event.preventDefault();
+    const usuarioId = document.getElementById('reservaUsuarioId').value;
+    const vueloId = document.getElementById('reservaVueloId').value;
 
+    try {
         const response = await fetch('http://www.proyectoad.somee.com/ReservaService.svc/rest/RegistrarReserva', {
             method: 'POST',
             headers: {
@@ -177,11 +181,11 @@ async function registrarReserva(event) {
 }
 
 async function actualizarReserva(event) {
-    try {
-        event.preventDefault(); // Aquí se debe llamar event.preventDefault() para prevenir el envío del formulario
-        const reservaId = document.getElementById('updateReservaId').value;
-        const estado = document.getElementById('updateEstado').value;
+    event.preventDefault();
+    const reservaId = document.getElementById('updateReservaId').value;
+    const estado = document.getElementById('updateEstado').value;
 
+    try {
         const response = await fetch(`http://www.proyectoad.somee.com/ReservaService.svc/rest/ActualizarReserva?ReservaID=${reservaId}&Estado=${estado}`, {
             method: 'PUT',
             headers: {
