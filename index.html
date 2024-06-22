@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reservas de Vuelos</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <header>
+        <nav>
+            <ul>
+                <li><button onclick="mostrarFormulario('loginForm')">Iniciar Sesión</button></li>
+                <li><button onclick="mostrarFormulario('registerForm')">Registrar Usuario</button></li>
+                <li><button onclick="mostrarFormulario('searchForm')">Buscar Vuelos</button></li>
+                <li><button onclick="mostrarFormulario('reserveForm')">Registrar Reserva</button></li>
+                <li><button onclick="mostrarFormulario('updateForm')">Actualizar Reserva</button></li>
+            </ul>
+        </nav>
+    </header>
+
+    <div class="forms">
+        <!-- Formulario de Inicio de Sesión -->
+        <form id="loginForm" class="form-container hidden" onsubmit="iniciarSesion(event)">
+            <h2>Iniciar Sesión</h2>
+            <label for="loginEmail">Correo Electrónico:</label>
+            <input type="email" id="loginEmail" required>
+            <label for="loginPassword">Contraseña:</label>
+            <input type="password" id="loginPassword" required>
+            <button type="submit">Iniciar Sesión</button>
+        </form>
+
+        <!-- Formulario de Registro de Usuario -->
+        <form id="registerForm" class="form-container hidden" onsubmit="registrarUsuario(event)">
+            <h2>Registrar Usuario</h2>
+            <label for="registerNombre">Nombre:</label>
+            <input type="text" id="registerNombre" required>
+            <label for="registerApellido">Apellido:</label>
+            <input type="text" id="registerApellido" required>
+            <label for="registerEmail">Correo Electrónico:</label>
+            <input type="email" id="registerEmail" required>
+            <label for="registerPassword">Contraseña:</label>
+            <input type="password" id="registerPassword" required>
+            <button type="submit">Registrar Usuario</button>
+        </form>
+
+        <!-- Formulario de Búsqueda de Vuelos -->
+        <form id="searchForm" class="form-container hidden" onsubmit="buscarVuelos(event)">
+            <h2>Buscar Vuelos</h2>
+            <label for="searchOrigen">Origen:</label>
+            <input type="text" id="searchOrigen" required>
+            <label for="searchDestino">Destino:</label>
+            <input type="text" id="searchDestino" required>
+            <button type="submit">Buscar Vuelos</button>
+        </form>
+
+        <!-- Formulario de Registro de Reserva -->
+        <form id="reserveForm" class="form-container hidden" onsubmit="registrarReserva(event)">
+            <h2>Registrar Reserva</h2>
+            <label for="reservaUsuarioId">ID de Usuario:</label>
+            <input type="number" id="reservaUsuarioId" required>
+            <label for="reservaVueloId">ID de Vuelo:</label>
+            <input type="number" id="reservaVueloId" required>
+            <button type="submit">Registrar Reserva</button>
+        </form>
+
+        <!-- Formulario de Actualización de Reserva -->
+        <form id="updateForm" class="form-container hidden" onsubmit="actualizarReserva(event)">
+            <h2>Actualizar Reserva</h2>
+            <label for="updateReservaId">ID de Reserva:</label>
+            <input type="number" id="updateReservaId" required>
+            <label for="updateEstado">Estado:</label>
+            <input type="text" id="updateEstado" required>
+            <button type="submit">Actualizar Reserva</button>
+        </form>
+    </div>
+
+    <div class="tables">
+        <!-- Tabla de Vuelos -->
+        <h2>Lista de Vuelos</h2>
+        <table id="vuelosTable">
+            <tr>
+                <th>Vuelo ID</th>
+                <th>Origen</th>
+                <th>Destino</th>
+                <th>Fecha Salida</th>
+                <th>Fecha Llegada</th>
+                <th>Precio</th>
+            </tr>
+        </table>
+
+        <!-- Tabla de Reservas -->
+        <h2>Lista de Reservas</h2>
+        <table id="reservasTable">
+            <tr>
+                <th>Reserva ID</th>
+                <th>Usuario ID</th>
+                <th>Vuelo ID</th>
+                <th>Estado</th>
+                <th>Fecha Reserva</th>
+            </tr>
+        </table>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
