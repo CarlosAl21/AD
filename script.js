@@ -18,7 +18,8 @@ async function iniciarSesion(event) {
         const data = await response.json();
         if (data.UsuarioId > 0) {
             alert(`Inicio de sesión exitoso. Bienvenido, ${data.Nombre} ${data.Apellido}!`);
-            listarReservas();
+            mostrarInformacionUsuario(data);
+            listarReservas(data.UsuarioId); // Pasar el UsuarioId al listarReservas
         } else {
             alert('Inicio de sesión fallido. Verifica tus credenciales.');
         }
@@ -52,6 +53,8 @@ async function registrarUsuario(event) {
         const data = await response.json();
         if (data.UsuarioId > 0) {
             alert(`Usuario registrado exitosamente. Bienvenido, ${nombre} ${apellido}!`);
+            mostrarInformacionUsuario(data);
+            listarReservas(data.UsuarioId); // Pasar el UsuarioId al listarReservas
         } else {
             alert('Error al registrar usuario. Por favor, inténtalo nuevamente.');
         }
@@ -59,6 +62,17 @@ async function registrarUsuario(event) {
         console.error('Error en registrarUsuario:', error);
         alert('Error al registrar usuario. Por favor, inténtalo nuevamente.');
     }
+}
+
+function mostrarInformacionUsuario(data) {
+    const userInfo = document.getElementById('userInfo');
+    userInfo.innerHTML = `
+        <h2>Información del Usuario</h2>
+        <p>ID: ${data.UsuarioId}</p>
+        <p>Nombre: ${data.Nombre}</p>
+        <p>Apellido: ${data.Apellido}</p>
+        <p>Correo Electrónico: ${data.CorreoElectronico}</p>
+    `;
 }
 
 async function listarVuelos() {
@@ -123,17 +137,25 @@ async function buscarVuelos(event) {
     }
 }
 
-async function listarReservas() {
+async function listarReservas(usuarioId) {
     try {
         const response = await fetch('http://www.proyectoad.somee.com/ReservaService.svc/rest/ListarReservas', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify([])
+            body: JSON.stringify({
+                UsuarioId: usuarioId // Incluir el ID del usuario en el cuerpo de la solicitud
+            })
         });
 
+        if (!response.ok) {
+            throw new Error(`Error al listar reservas: ${response.status}`);
+        }
+
         const data = await response.json();
+        console.log('Respuesta del servidor:', data); // Imprimir la respuesta para verificar
+
         const table = document.getElementById('reservasTable');
         table.innerHTML = '<tr><th>Reserva ID</th><th>Usuario ID</th><th>Vuelo ID</th><th>Estado</th><th>Fecha Reserva</th></tr>';
         data.forEach(reserva => {
@@ -151,32 +173,46 @@ async function listarReservas() {
 }
 
 async function registrarReserva(event) {
-    event.preventDefault();
-    const usuarioId = document.getElementById('reservaUsuarioId').value;
-    const vueloId = document.getElementById('reservaVueloId').value;
-
     try {
-        const response = await fetch('http://www.proyectoad.somee.com/ReservaService.svc/rest/RegistrarReserva', {
+        event.preventDefault(); // Prevenir el envío del formulario
+
+        const usuarioId = document.getElementById('reservaUsuarioId').value;
+        const vueloId = document.getElementById('reservaVueloId').value;
+
+        // Validar que los valores de usuarioId y vueloId sean números válidos
+        if (!usuarioId || isNaN(parseInt(usuarioId)) || !vueloId || isNaN(parseInt(vueloId))) {
+            throw new Error('Por favor, ingresa valores válidos para ID de usuario y vuelo.');
+        }
+
+        const url = 'http://www.proyectoad.somee.com/ReservaService.svc/rest/RegistrarReserva';
+        const data = {
+            UsuarioId: parseInt(usuarioId),
+            VueloID: parseInt(vueloId)
+        };
+
+        const response = await fetch(url, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({
-                UsuarioId: parseInt(usuarioId),
-                VueloID: parseInt(vueloId)
-            })
+            body: JSON.stringify(data)
         });
 
-        const data = await response.json();
-        if (data.ReservaID > 0) {
+        if (!response.ok) {
+            throw new Error(`Error en la solicitud de registrar reserva. Código de estado: ${response.status}`);
+        }
+
+        const responseData = await response.json();
+
+        if (responseData.ReservaID > 0) {
             alert('Reserva registrada exitosamente.');
-            listarReservas();
+            listarReservas(parseInt(usuarioId));
         } else {
-            alert('Error al registrar reserva. Por favor, inténtalo nuevamente.');
+            throw new Error('Error al registrar reserva. No se recibió un ID válido de reserva.');
         }
     } catch (error) {
         console.error('Error en registrarReserva:', error);
-        alert('Error al registrar reserva. Por favor, inténtalo nuevamente.');
+        alert('Error al registrar reserva. ' + error.message); // Mostrar mensaje de error específico
     }
 }
 
@@ -224,5 +260,4 @@ function mostrarFormulario(id) {
 // Cargar la lista de vuelos y de reservas al cargar la página
 window.onload = function () {
     listarVuelos();
-    listarReservas();
 };
