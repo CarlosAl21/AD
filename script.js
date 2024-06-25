@@ -253,7 +253,6 @@ async function actualizarReserva(event) {
             })
         });
 
-        
         const data = await response.json();
         if (data.ReservaID > 0) {
             alert('Reserva actualizada exitosamente.');
