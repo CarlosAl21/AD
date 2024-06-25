@@ -5,6 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Reservas de Vuelos</title>
     <link rel="stylesheet" href="styles.css">
+    <style>
+        .hidden { display: none; }
+    </style>
 </head>
 <body>
     <header>
@@ -15,6 +18,7 @@
                 <li><button onclick="mostrarFormulario('searchForm')">Buscar Vuelos</button></li>
                 <li><button onclick="mostrarFormulario('reserveForm')">Registrar Reserva</button></li>
                 <li><button onclick="mostrarFormulario('updateForm')">Actualizar Reserva</button></li>
+                <li><button onclick="cerrarSesion()">Cerrar Sesión</button></li>
             </ul>
         </nav>
     </header>

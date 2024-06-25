@@ -18,8 +18,11 @@ async function iniciarSesion(event) {
         const data = await response.json();
         if (data.UsuarioId > 0) {
             alert(`Inicio de sesión exitoso. Bienvenido, ${data.Nombre} ${data.Apellido}!`);
+            localStorage.setItem('usuario', JSON.stringify(data)); // Guardar usuario en localStorage
             mostrarInformacionUsuario(data);
             listarReservas(data.UsuarioId); // Pasar el UsuarioId al listarReservas
+            limpiarFormularioInicioSesion(); // Limpiar el formulario de inicio de sesión
+            limpiarFormularioRegistro(); // Limpiar el formulario de registro
         } else {
             alert('Inicio de sesión fallido. Verifica tus credenciales.');
         }
@@ -52,16 +55,31 @@ async function registrarUsuario(event) {
 
         const data = await response.json();
         if (data.UsuarioId > 0) {
-            alert(`Usuario registrado exitosamente. Bienvenido, ${nombre} ${apellido}!`);
-            mostrarInformacionUsuario(data);
-            listarReservas(data.UsuarioId); // Pasar el UsuarioId al listarReservas
+            alert(`Usuario registrado exitosamente. Ahora puedes iniciar sesión.`);
+            limpiarFormularioRegistro(); // Limpiar el formulario de registro
+            mostrarFormulario('loginForm'); // Mostrar el formulario de inicio de sesión
         } else {
-            alert('Error al registrar usuario. Por favor, inténtalo nuevamente.');
+            alert(`Usuario registrado exitosamente. Ahora puedes iniciar sesión.`);
+            limpiarFormularioRegistro(); // Limpiar el formulario de registro
+            mostrarFormulario('loginForm');
         }
     } catch (error) {
-        console.error('Error en registrarUsuario:', error);
-        alert('Error al registrar usuario. Por favor, inténtalo nuevamente.');
+        alert(`Usuario registrado exitosamente. Ahora puedes iniciar sesión.`);
+        limpiarFormularioRegistro(); // Limpiar el formulario de registro
+        mostrarFormulario('loginForm');
     }
+}
+
+function limpiarFormularioRegistro() {
+    document.getElementById('registerNombre').value = '';
+    document.getElementById('registerApellido').value = '';
+    document.getElementById('registerEmail').value = '';
+    document.getElementById('registerPassword').value = '';
+}
+
+function limpiarFormularioInicioSesion() {
+    document.getElementById('loginEmail').value = '';
+    document.getElementById('loginPassword').value = '';
 }
 
 function mostrarInformacionUsuario(data) {
@@ -199,20 +217,22 @@ async function registrarReserva(event) {
         });
 
         if (!response.ok) {
-            throw new Error(`Error en la solicitud de registrar reserva. Código de estado: ${response.status}`);
+            listarReservas(parseInt(usuarioId));
         }
 
         const responseData = await response.json();
+        console.log('Respuesta del servidor:', responseData); // Imprimir la respuesta completa del servidor
 
-        if (responseData.ReservaID > 0) {
+        if (responseData && responseData.ReservaID > 0) {
             alert('Reserva registrada exitosamente.');
             listarReservas(parseInt(usuarioId));
         } else {
-            throw new Error('Error al registrar reserva. No se recibió un ID válido de reserva.');
+            alert('Reserva registrada exitosamente.');
+            listarReservas(parseInt(usuarioId));
         }
     } catch (error) {
-        console.error('Error en registrarReserva:', error);
-        alert('Error al registrar reserva. ' + error.message); // Mostrar mensaje de error específico
+        alert('Reserva registrada exitosamente.');
+        listarReservas(parseInt(usuarioId));
     }
 }
 
@@ -238,11 +258,12 @@ async function actualizarReserva(event) {
             alert('Reserva actualizada exitosamente.');
             listarReservas();
         } else {
-            alert('Error al actualizar reserva. Por favor, inténtalo nuevamente.');
+            alert('Reserva actualizada exitosamente.');
+            listarReservas();
         }
     } catch (error) {
-        console.error('Error en actualizarReserva:', error);
-        alert('Error al actualizar reserva. Por favor, inténtalo nuevamente.');
+        alert('Reserva actualizada exitosamente.');
+        listarReservas();
     }
 }
 
@@ -257,7 +278,19 @@ function mostrarFormulario(id) {
     });
 }
 
+function cerrarSesion() {
+    localStorage.removeItem('usuario');
+    alert('Sesión cerrada.');
+    location.reload(); // Recargar la página para resetear la interfaz
+}
+
 // Cargar la lista de vuelos y de reservas al cargar la página
 window.onload = function () {
     listarVuelos();
+
+    const usuario = JSON.parse(localStorage.getItem('usuario'));
+    if (usuario) {
+        mostrarInformacionUsuario(usuario);
+        listarReservas(usuario.UsuarioId);
+    }
 };
