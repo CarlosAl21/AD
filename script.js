@@ -4,7 +4,7 @@ async function iniciarSesion(event) {
     const password = document.getElementById('loginPassword').value;
 
     try {
-        const response = await fetch('https://www.proyectoad.somee.com/AuthService.svc/rest/IniciarSesion', {
+        const response = await fetch('http://www.proyectoad.somee.com/AuthService.svc/rest/IniciarSesion', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -40,7 +40,7 @@ async function registrarUsuario(event) {
     const password = document.getElementById('registerPassword').value;
 
     try {
-        const response = await fetch('https://www.proyectoad.somee.com/UsuarioService.svc/rest/RegistrarUsuario', {
+        const response = await fetch('http://www.proyectoad.somee.com/UsuarioService.svc/rest/RegistrarUsuario', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -95,7 +95,7 @@ function mostrarInformacionUsuario(data) {
 
 async function listarVuelos() {
     try {
-        const response = await fetch('https://www.proyectoad.somee.com/VueloService.svc/rest/ListarVuelos', {
+        const response = await fetch('http://www.proyectoad.somee.com/VueloService.svc/rest/ListarVuelos', {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json'
@@ -126,7 +126,7 @@ async function buscarVuelos(event) {
     const destino = document.getElementById('searchDestino').value;
 
     try {
-        const response = await fetch('https://www.proyectoad.somee.com/VueloService.svc/rest/BuscarVuelos', {
+        const response = await fetch('http://www.proyectoad.somee.com/VueloService.svc/rest/BuscarVuelos', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -157,7 +157,7 @@ async function buscarVuelos(event) {
 
 async function listarReservas(usuarioId) {
     try {
-        const response = await fetch('https://www.proyectoad.somee.com/ReservaService.svc/rest/ListarReservas', {
+        const response = await fetch('http://www.proyectoad.somee.com/ReservaService.svc/rest/ListarReservas', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -202,7 +202,7 @@ async function registrarReserva(event) {
             throw new Error('Por favor, ingresa valores válidos para ID de usuario y vuelo.');
         }
 
-        const url = 'https://www.proyectoad.somee.com/ReservaService.svc/rest/RegistrarReserva';
+        const url = 'http://www.proyectoad.somee.com/ReservaService.svc/rest/RegistrarReserva';
         const data = {
             UsuarioId: parseInt(usuarioId),
             VueloID: parseInt(vueloId)
@@ -242,7 +242,7 @@ async function actualizarReserva(event) {
     const estado = document.getElementById('updateEstado').value;
 
     try {
-        const response = await fetch(`https://www.proyectoad.somee.com/ReservaService.svc/rest/ActualizarReserva?ReservaID=${reservaId}&Estado=${estado}`, {
+        const response = await fetch(`http://www.proyectoad.somee.com/ReservaService.svc/rest/ActualizarReserva?ReservaID=${reservaId}&Estado=${estado}`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json'
